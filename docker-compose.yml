@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_DB: djheroku
+      POSTGRES_DB: reliability
     volumes:
       - pgdata:/var/lib/postgresql/data/
 

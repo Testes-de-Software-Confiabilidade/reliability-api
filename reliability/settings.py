@@ -67,15 +67,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'reliability.wsgi.application'
 
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('NAME', 'postgres'),
+            'USER': os.environ.get('USER', 'postgres'),
+            'PASSWORD': os.environ.get('PASSWORD', ''),
+            'HOST': os.environ.get('HOST', 'hostname'),
+            'PORT': os.environ.get('PORT', '5432'),
+        }
+    }
+else:
+    DATABASES = {
+        # If DATABASE_URL environment variable isn't set, use Docker Compose Postgres database.
+        'default': dj_database_url.config(
+            default='postgres://postgres:postgres@db:5432/reliability',
+            conn_max_age=600,
+        )
+    }
 
-# Database
-DATABASES = {
-    # If DATABASE_URL environment variable isn't set, use Docker Compose Postgres database.
-    'default': dj_database_url.config(
-        default='postgres://postgres:postgres@db:5432/djheroku',
-        conn_max_age=600,
-    )
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
