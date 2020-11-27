@@ -12,3 +12,13 @@ def example(seconds):
     job.meta['progress'] = 100
     job.save_meta()
     print('Task completed')
+
+
+def testing(a, b, c, d):
+    job =get_current_job()
+    job.meta['a'] = a
+    job.meta['b'] = b
+    job.meta['c'] = c
+    job.meta['d'] = d
+    job.save_meta()
+    time.sleep(2)
