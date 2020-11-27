@@ -72,12 +72,14 @@ class RepositoryViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             must_not_have_labels
         )
 
+        domain = get_current_site(request)
+
         data = {
             'message': ("The repository has been successfully added to "
                         "the processing queue! Follow the link to check "
                         "the processing status."
                        ),
-            'link': f'{get_current_site(request)}/processing?status_token={job.get_id()}'
+            'link': f'https://{domain}/processing?status_token={job.get_id()}'
         }
 
         headers = self.get_success_headers(serializer.data)
