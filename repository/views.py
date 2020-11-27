@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.db.utils import IntegrityError
+from django.contrib.sites.shortcuts import get_current_site
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -76,7 +77,7 @@ class RepositoryViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
                         "the processing queue! Follow the link to check "
                         "the processing status."
                        ),
-            'link': f'http://0.0.0.0:8000/processing?status_token={job.get_id()}'
+            'link': f'{get_current_site(request)}/processing?status_token={job.get_id()}'
         }
 
         headers = self.get_success_headers(serializer.data)
