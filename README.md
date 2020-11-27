@@ -1,8 +1,8 @@
 # API para o serviço de Confiabilidade
 
-Essa API irá receber requisições de processamento de issues de repositório.
-Quando o processamento acabar, será retornado uma URL de uma image com o gráfico resultante do processamento.
-Enquanto o processamento estiver sendo efetuado, o requisitante poderá conferir o status do processamento através do uso de um token de consulta de status.
+Essa API fornece o serviço de processamento de repositório, retornando um link para a imagem resultante desse processamento.
+Quando a solitação é feita, é retornado um `token de status` que irá está associado a um processamento. Com esse token é possível obter o status do processamento.
+Quando o processamento é finalizado, a rota de status do processamento irá returnar o link para a imagem resultante.
 
 
 <br><br>
