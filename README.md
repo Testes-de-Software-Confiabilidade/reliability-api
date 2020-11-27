@@ -4,7 +4,33 @@ Essa API irá receber requisições de processamento de issues de repositório.
 Quando o processamento acabar, será retornado uma URL de uma image com o gráfico resultante do processamento.
 Enquanto o processamento estiver sendo efetuado, o requisitante poderá conferir o status do processamento através do uso de um token de consulta de status.
 
+
 <br><br>
+## Rodar locamente
+
+#### 1. Crie uma conta no [imgur](https://imgur.com/)
+#### 2. Registre uma aplicação na sua conta do imgur ([link](https://api.imgur.com/oauth2/addclient)).
+
+> Durante o registro seleciona a opção `OAuth 2 authorization without a callback URL`
+
+#### 3. Atualize o arquivo `.env` com seu `CLIENT_ID`
+
+#### 4. Rode o comando abaixo para não deixar o git rastrear o arquivo `.env`
+
+```
+git update-index --assume-unchanged .env
+```
+
+#### 5. Suba os containers com o docker-compose
+
+```
+sudo docker-compose up
+```
+
+
+<br><br>
+
+# Rotas
 
 ## GET /issues
 #### Parameters
@@ -26,11 +52,13 @@ Enquanto o processamento estiver sendo efetuado, o requisitante poderá conferir
 }
 ```
 
-GITHUB TOKEN: É preciso criar um token em https://github.com/settings/tokens, para aumentar o limite de requisições realizadas para a API do Github. Não é preciso de nenhuma autorização.
+GITHUB TOKEN: É preciso criar um token em https://github.com/settings/tokens, para aumentar o limite de requisições realizadas para a API do Github.
+
+**DURANTE A CRIAÇÃO NÃO É PRECISO DE NENHUMA AUTORIZAÇÃO**
 
 
 
-#### Reponse
+### Reponse
 | Name | Type | Description |
 |:----:|:----:|:-----------:|
 | message | ```string```  | Mensagem para o status do processamento |
