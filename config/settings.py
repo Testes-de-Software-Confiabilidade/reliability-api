@@ -19,8 +19,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'q#br=ggq_)j+c@2zrvr0hpxl+0di(@!l!#3u7gem-dgs0nw#l4')
 
 # SECURITY WARNING: don't run with debug turned on in production
-# DEBUG = int(os.environ.get("DEBUG", default=0))
-PRODUCTION = bool(os.environ.get("PRODUCTION", False))
+DEBUG = True if int(os.getenv("DEBUG", default=0))==1 else False
+PRODUCTION = True if int(os.getenv("PRODUCTION", default=0))==1 else False
+
+DEBUG = True
+print('\n'*3)
+print(' .env', os.getenv("PRODUCTION"))
+print('PRODUCTION =', PRODUCTION)
+print('\n'*3)
 
 ALLOWED_HOSTS = ['reliability-django.herokuapp.com/', 'localhost', '127.0.0.1', '0.0.0.0']
 
@@ -70,16 +76,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
-if PRODUCTION:
+if PRODUCTION == True:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('NAME', 'postgres'),
-            'USER': os.environ.get('USER', 'postgres'),
-            'PASSWORD': os.environ.get('PASSWORD', ''),
-            'HOST': os.environ.get('HOST', 'hostname'),
-            'PORT': os.environ.get('PORT', '5432'),
+            'NAME': os.getenv('NAME', 'postgres'),
+            'USER': os.getenv('USER', 'postgres'),
+            'PASSWORD': os.getenv('PASSWORD', ''),
+            'HOST': os.getenv('HOST', 'hostname'),
+            'PORT': os.getenv('PORT', '5432'),
         }
     }
 else:
@@ -94,8 +99,8 @@ else:
         }
     }
 
-db_from_env = dj_database_url.config(conn_max_age=600)
-DATABASES['default'].update(db_from_env)
+# db_from_env = dj_database_url.config(conn_max_age=600)
+# DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -130,7 +135,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
@@ -149,29 +154,29 @@ CACHES = {
 }
 
 DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda request: PRODUCTION==False,
+    'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG,
 }
 
 # queue = rq.Queue('default', connection=conn)
 
 s3_conn = boto3.resource(
     's3',
-    aws_access_key_id=os.environ.get('AWS_ACCESS_KEY', None), 
-    aws_secret_access_key=os.environ.get('AWS_SECRECT_ACCESS_KEY', None), 
+    aws_access_key_id=os.getenv('AWS_ACCESS_KEY', None), 
+    aws_secret_access_key=os.getenv('AWS_SECRECT_ACCESS_KEY', None), 
 )
 
-BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME', None)
+BUCKET_NAME = os.getenv('AWS_S3_BUCKET_NAME', None)
 image_bucket = s3_conn.Bucket(BUCKET_NAME)
 
 RQ_SHOW_ADMIN_LINK = False
 
-if PRODUCTION:
+if PRODUCTION == True:
     RQ_QUEUES = {
         'default': {
-            'HOST': os.environ.get('REDIS_HOST', None),
-            'PORT': os.environ.get('REDIS_PORT', None),
+            'HOST': os.getenv('REDIS_HOST', None),
+            'PORT': os.getenv('REDIS_PORT', None),
             'DB': 0,
-            'PASSWORD': os.environ.get('REDIS_PASSWORD', None),
+            'PASSWORD': os.getenv('REDIS_PASSWORD', None),
             'DEFAULT_TIMEOUT': 3600,
         },
     }

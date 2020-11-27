@@ -5,7 +5,7 @@ services:
     build: .
     command: bash -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
     environment:
-      DEBUG: 0
+      DEBUG: 1
     volumes:
       - .:/app
     ports:
@@ -18,7 +18,7 @@ services:
     build: .
     command: bash -c "pip install -r requirements.txt && python manage.py rqworker default"
     environment:
-      DEBUG: 0
+      DEBUG: 1
     volumes:
       - .:/app
     depends_on:
