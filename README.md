@@ -19,7 +19,7 @@ Enquanto o processamento estiver sendo efetuado, o requisitante poderá conferir
 #### Exemplo
 ```json
 {
-    "github_token": <"GITHUB TOKEN">,
+    "github_token": "<GITHUB TOKEN>",
     "url": "https://github.com/facebook/react",
     "must_have_labels": ["Type: Bug", "bug"],
     "must_not_have_labels": ["Status: Unconfirmed"]
