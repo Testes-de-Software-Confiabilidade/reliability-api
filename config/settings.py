@@ -8,6 +8,11 @@ import dj_database_url
 
 load_dotenv()
 
+# print('\n'*3)
+# print("os.environ.get('DEBUG')", os.environ.get('DEBUG'))
+# print("os.environ.get('PRODUCTION')", os.environ.get('PRODUCTION'))
+# print('\n'*3)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -18,8 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production
-DEBUG = True if int(os.environ.get("DEBUG", default=0))==1 else False
-PRODUCTION = True if int(os.environ.get("PRODUCTION", default=0))==1 else False
+DEBUG = True if int(os.environ.get("DEBUG"))==1 else False
+PRODUCTION = True if int(os.environ.get("PRODUCTION"))==1 else False
 
 ALLOWED_HOSTS = ['reliability-django.herokuapp.com', 'localhost', '127.0.0.1', '0.0.0.0']
 
