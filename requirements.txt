@@ -12,3 +12,4 @@ reliability
 matplotlib
 scipy
 django-rq
+dj-database-url

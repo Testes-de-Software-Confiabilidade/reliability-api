@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import rq
 # from worker import conn
 import boto3
+import dj_database_url
 
 load_dotenv()
 
@@ -21,7 +22,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'q#br=ggq_)j+c@2zrvr0hpxl+0di(@!l!#3u7gem-d
 # DEBUG = int(os.environ.get("DEBUG", default=0))
 PRODUCTION = bool(os.environ.get("PRODUCTION", False))
 
-ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['reliability-django.herokuapp.com/', 'localhost', '127.0.0.1', '0.0.0.0']
 
 # Application definition
 
@@ -92,7 +93,9 @@ else:
             'PORT': 5432,
         }
     }
-    
+
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
