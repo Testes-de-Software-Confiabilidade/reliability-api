@@ -11,22 +11,15 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'q#br=ggq_)j+c@2zrvr0hpxl+0di(@!l!#3u7gem-dgs0nw#l4')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production
-DEBUG = True if int(os.getenv("DEBUG", default=0))==1 else False
-PRODUCTION = True if int(os.getenv("PRODUCTION", default=0))==1 else False
-
-DEBUG = True
-print('\n'*3)
-print(' .env', os.getenv("PRODUCTION"))
-print('PRODUCTION =', PRODUCTION)
-print('\n'*3)
+DEBUG = True if int(os.environ.get("DEBUG", default=0))==1 else False
+PRODUCTION = True if int(os.environ.get("PRODUCTION", default=0))==1 else False
 
 ALLOWED_HOSTS = ['reliability-django.herokuapp.com', 'localhost', '127.0.0.1', '0.0.0.0']
 
@@ -80,11 +73,11 @@ if PRODUCTION == True:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('NAME', 'postgres'),
-            'USER': os.getenv('USER', 'postgres'),
-            'PASSWORD': os.getenv('PASSWORD', ''),
-            'HOST': os.getenv('HOST', 'hostname'),
-            'PORT': os.getenv('PORT', '5432'),
+            'NAME': os.environ.get('NAME', 'postgres'),
+            'USER': os.environ.get('USER', 'postgres'),
+            'PASSWORD': os.environ.get('PASSWORD', ''),
+            'HOST': os.environ.get('HOST', 'hostname'),
+            'PORT': os.environ.get('PORT', '5432'),
         }
     }
 else:
@@ -149,7 +142,7 @@ CACHES = {
     'default': {
         'BACKEND': 'redis_cache.RedisCache',
         # By default use Docker Compose Redis instance.
-        'LOCATION': os.getenv('REDIS_URL', 'redis:6379'),
+        'LOCATION': os.environ.get('REDIS_URL', 'redis:6379'),
     },
 }
 
@@ -161,11 +154,11 @@ DEBUG_TOOLBAR_CONFIG = {
 
 s3_conn = boto3.resource(
     's3',
-    aws_access_key_id=os.getenv('AWS_ACCESS_KEY', None), 
-    aws_secret_access_key=os.getenv('AWS_SECRECT_ACCESS_KEY', None), 
+    aws_access_key_id=os.environ.get('AWS_ACCESS_KEY', None), 
+    aws_secret_access_key=os.environ.get('AWS_SECRECT_ACCESS_KEY', None), 
 )
 
-BUCKET_NAME = os.getenv('AWS_S3_BUCKET_NAME', None)
+BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME', None)
 image_bucket = s3_conn.Bucket(BUCKET_NAME)
 
 RQ_SHOW_ADMIN_LINK = False
@@ -173,10 +166,10 @@ RQ_SHOW_ADMIN_LINK = False
 if PRODUCTION == True:
     RQ_QUEUES = {
         'default': {
-            'HOST': os.getenv('REDIS_HOST', None),
-            'PORT': os.getenv('REDIS_PORT', None),
+            'HOST': os.environ.get('REDIS_HOST', None),
+            'PORT': os.environ.get('REDIS_PORT', None),
             'DB': 0,
-            'PASSWORD': os.getenv('REDIS_PASSWORD', None),
+            'PASSWORD': os.environ.get('REDIS_PASSWORD', None),
             'DEFAULT_TIMEOUT': 3600,
         },
     }
