@@ -28,7 +28,7 @@ print(' .env', os.getenv("PRODUCTION"))
 print('PRODUCTION =', PRODUCTION)
 print('\n'*3)
 
-ALLOWED_HOSTS = ['reliability-django.herokuapp.com/', 'localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['reliability-django.herokuapp.com', 'localhost', '127.0.0.1', '0.0.0.0']
 
 # Application definition
 
