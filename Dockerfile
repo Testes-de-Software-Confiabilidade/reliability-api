@@ -31,6 +31,4 @@ RUN python -m pip install -U pip wheel setuptools
 
 RUN pip install -r /app/requirements.txt
 
-RUN source .env 
-
 COPY . /app/

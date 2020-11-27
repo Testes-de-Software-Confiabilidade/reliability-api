@@ -8,11 +8,6 @@ import dj_database_url
 
 load_dotenv()
 
-# print('\n'*3)
-# print("os.environ.get('DEBUG')", os.environ.get('DEBUG'))
-# print("os.environ.get('PRODUCTION')", os.environ.get('PRODUCTION'))
-# print('\n'*3)
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

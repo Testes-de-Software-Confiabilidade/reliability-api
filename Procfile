@@ -1,2 +1,2 @@
 web: gunicorn config.wsgi --log-file -
-worker: python manage.py rqworker default
+worker: python config.manage.py rqworker default
