@@ -1,3 +1,5 @@
+import requests
+
 import io
 from collections import Counter
 import string
@@ -9,7 +11,7 @@ from github import Github
 
 import matplotlib.pyplot as plt
 
-from config.settings import image_bucket, BUCKET_NAME
+from config.settings import image_bucket, BUCKET_NAME, IMGUR_CLIENT_ID
 
 import scipy.stats as ss
 
@@ -61,17 +63,30 @@ def process(repository, must_not_have_labels):
     img_bytes = get_image(repository, must_not_have_labels)
     image_hash_name = get_random_slug() + '.png'
 
-    # TODO: WHEN DEGUG==TRUE SAVE ON ANOTHER PLACE
-    image_bucket.put_object(
-        Body=img_bytes, 
-        ContentType='image/png', 
-        Key=image_hash_name,
-        ACL='public-read'
+    # IF ON PRODUCTION
+    if image_bucket:
+        image_bucket.put_object(
+            Body=img_bytes, 
+            ContentType='image/png', 
+            Key=image_hash_name,
+            ACL='public-read'
+        )
+
+        img_url = f'https://{BUCKET_NAME}.s3-sa-east-1.amazonaws.com/{image_hash_name}'
+
+        return img_url
+    
+    # ELSE DEBUG
+    auth_token = f'Client-ID {IMGUR_CLIENT_ID}'
+    response = requests.request(
+        "POST",
+        "https://api.imgur.com/3/image",
+        headers={ 'Authorization': auth_token },
+        data=img_bytes,
     )
 
-    img_url = f'https://{BUCKET_NAME}.s3-sa-east-1.amazonaws.com/{image_hash_name}'
-
-    return img_url
+    response_json = response.json()
+    return response_json['data']['link']
 
 
 def process_async(github_token, url, must_have_labels, must_not_have_labels):

@@ -22,7 +22,8 @@ DEBUG = True if int(os.environ.get("DEBUG"))==1 else False
 PRODUCTION = True if int(os.environ.get("PRODUCTION"))==1 else False
 
 # REMOVE LATER
-DEBUG = PRODUCTION = True
+DEBUG = True
+PRODUCTION = False
 
 ALLOWED_HOSTS = ['reliability-django.herokuapp.com', 'localhost', '127.0.0.1', '0.0.0.0']
 
@@ -155,22 +156,27 @@ DEBUG_TOOLBAR_CONFIG = {
 
 # queue = rq.Queue('default', connection=conn)
 
-s3_conn = boto3.resource(
-    's3',
-    aws_access_key_id=os.environ.get('AWS_ACCESS_KEY', None), 
-    aws_secret_access_key=os.environ.get('AWS_SECRECT_ACCESS_KEY', None), 
-)
+if PRODUCTION:
+    s3_conn = boto3.resource(
+        's3',
+        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY', None), 
+        aws_secret_access_key=os.environ.get('AWS_SECRECT_ACCESS_KEY', None), 
+    )
+else:
+    s3_conn = None
+
+IMGUR_CLIENT_ID = os.environ.get('IMGUR_CLIENT_ID', None)
 
 BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME', None)
-image_bucket = s3_conn.Bucket(BUCKET_NAME)
+image_bucket = s3_conn.Bucket(BUCKET_NAME) if BUCKET_NAME else None
 
 RQ_SHOW_ADMIN_LINK = False
 
 if PRODUCTION == True:
     RQ_QUEUES = {
         'default': {
-            'HOST': os.environ.get('REDIS_HOST', None),
-            'PORT': os.environ.get('REDIS_PORT', None),
+            'HOST': os.environ.get('REDIS_HOST', 'redis'),
+            'PORT': os.environ.get('REDIS_PORT', 6379),
             'DB': 0,
             'PASSWORD': os.environ.get('REDIS_PASSWORD', None),
             'DEFAULT_TIMEOUT': 3600,
