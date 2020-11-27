@@ -21,6 +21,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True if int(os.environ.get("DEBUG"))==1 else False
 PRODUCTION = True if int(os.environ.get("PRODUCTION"))==1 else False
 
+# REMOVE LATER
+DEBUG = PRODUCTION = True
+
 ALLOWED_HOSTS = ['reliability-django.herokuapp.com', 'localhost', '127.0.0.1', '0.0.0.0']
 
 # Application definition
@@ -184,3 +187,6 @@ else:
     }
 
 
+
+import django_heroku
+django_heroku.settings(locals())

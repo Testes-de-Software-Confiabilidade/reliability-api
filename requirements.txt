@@ -13,3 +13,4 @@ matplotlib
 scipy
 django-rq
 dj-database-url
+django_heroku
