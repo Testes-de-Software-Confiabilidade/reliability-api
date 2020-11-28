@@ -6,7 +6,7 @@ import rq
 import boto3
 import dj_database_url
 
-load_dotenv()
+load_dotenv(dotenv_path='.env', verbose=True, override=True)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,8 +22,12 @@ DEBUG = True if int(os.environ.get("DEBUG"))==1 else False
 PRODUCTION = True if int(os.environ.get("PRODUCTION"))==1 else False
 
 # REMOVE LATER
-DEBUG = True
-PRODUCTION = False
+# DEBUG = False
+# PRODUCTION = False
+# print('\n'*3)
+# print(' DEBUG', DEBUG)
+# print('PRODUCTION', PRODUCTION)
+# print('\n'*3)
 
 ALLOWED_HOSTS = ['reliability-django.herokuapp.com', 'localhost', '127.0.0.1', '0.0.0.0']
 
@@ -122,13 +126,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
@@ -154,21 +154,19 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG,
 }
 
-# queue = rq.Queue('default', connection=conn)
-
 if PRODUCTION:
+    BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME', None)
     s3_conn = boto3.resource(
         's3',
         aws_access_key_id=os.environ.get('AWS_ACCESS_KEY', None), 
         aws_secret_access_key=os.environ.get('AWS_SECRECT_ACCESS_KEY', None), 
     )
+    image_bucket = s3_conn.Bucket(BUCKET_NAME) if BUCKET_NAME else None
 else:
-    s3_conn = None
+    image_bucket = BUCKET_NAME = None
 
 IMGUR_CLIENT_ID = os.environ.get('IMGUR_CLIENT_ID', None)
 
-BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME', None)
-image_bucket = s3_conn.Bucket(BUCKET_NAME) if BUCKET_NAME else None
 
 RQ_SHOW_ADMIN_LINK = False
 
@@ -191,7 +189,6 @@ else:
             'DEFAULT_TIMEOUT': 3600,
         },
     }
-
 
 
 import django_heroku
