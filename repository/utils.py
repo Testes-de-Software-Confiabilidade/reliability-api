@@ -89,7 +89,7 @@ def process(repository, must_not_have_labels):
     return response_json['data']['link']
 
 
-def process_async(github_token, url, must_have_labels, must_not_have_labels):
+def process_async(github_token_list, url, must_have_labels, must_not_have_labels):
     job = get_current_job()
     job.meta['ERRORS_MSG'] = []
     job.meta['ERRORS'] = False
@@ -106,7 +106,7 @@ def process_async(github_token, url, must_have_labels, must_not_have_labels):
 
     try:
         repository = import_filtered_issues(
-            github_token, 
+            github_token_list, 
             url, 
             must_have_labels, 
             must_not_have_labels
@@ -185,8 +185,8 @@ def get_image(repository, must_not_have_labels):
 """
     This function get all valid issues and saves on database
 """
-def import_filtered_issues(github_token, url, must_have_labels, must_not_have_labels):
-    g = Github(login_or_token=github_token)
+def import_filtered_issues(github_token_list, url, must_have_labels, must_not_have_labels):
+    g = Github(login_or_token=github_token_list[0])
 
     repo_name = url.replace('https://github.com/', '')
     repo_name = repo_name[:-1] if repo_name[-1] == '/' else repo_name
@@ -204,16 +204,13 @@ def import_filtered_issues(github_token, url, must_have_labels, must_not_have_la
         raise
         
     all_issues = conn.get_issues(state='all', labels=must_have_labels, direction='asc')
-    # print('\n'*3)
-    # print('all_issues.totalCount', all_issues.totalCount)
-    # print('\n'*3)
 
     r = Repository.objects.get(
         url=url,
         must_have_labels=str(sorted(list(set(must_have_labels))))
     )
 
-    if all_issues.totalCount < 100:
+    if all_issues.totalCount < 10:
         # print('inside 100 validation'*4)
         job.meta['ERRORS'] = True
         job.meta['ERRORS_MSG'].append(
@@ -227,9 +224,15 @@ def import_filtered_issues(github_token, url, must_have_labels, must_not_have_la
     total = job.meta['total_of_issues'] = all_issues.totalCount
     job.save_meta()
 
+    idx = 0
     for i, issue in enumerate(all_issues):
         if(issue.pull_request):
             continue
+
+        if(g.get_rate_limit().core.remaining < 10):
+            idx += 1
+            g._Github__requester._Requester__authorizationHeader = "token " + \
+                github_token_list[idx % len(github_token_list)]
 
         created_issue = Issue.objects.create(
             repository=r,

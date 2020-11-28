@@ -14,6 +14,7 @@ from .models import Repository, AsyncTask
 from .serializers import RepositorySerializer
 from .utils import process
 
+
 def index(request):
     return render(request, 'repository/index.html', {})
 
@@ -29,7 +30,7 @@ class RepositoryViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         url                  = serializer.data.get('url', None)
         must_have_labels     = serializer.data.get('must_have_labels', None)
         must_not_have_labels = serializer.data.get('must_not_have_labels', None)
-        github_token         = serializer.data.get('github_token', None)
+        github_token_list    = serializer.data.get('github_token', None)
 
         repositories = Repository.objects.filter(
             url=url, 
@@ -66,7 +67,7 @@ class RepositoryViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
         job = django_rq.enqueue(
             'repository.utils.process_async', 
-            github_token,
+            github_token_list,
             url,
             must_have_labels,
             must_not_have_labels
