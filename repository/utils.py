@@ -210,7 +210,7 @@ def import_filtered_issues(github_token_list, url, must_have_labels, must_not_ha
         must_have_labels=str(sorted(list(set(must_have_labels))))
     )
 
-    if all_issues.totalCount < 10:
+    if all_issues.totalCount < 100:
         # print('inside 100 validation'*4)
         job.meta['ERRORS'] = True
         job.meta['ERRORS_MSG'].append(
