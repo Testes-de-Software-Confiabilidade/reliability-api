@@ -36,7 +36,7 @@ sudo docker-compose up
 #### Parameters
 | Name | Type | Description |
 |:----:|:----:|:-----------:|
-| github_token | ```string```  | Token para acessar a API do Github |
+| github_token | ```lista de string```  | Tokens que podem ser usados para acessar a API do Github |
 | url | ```string```  | URL para o repositório que será analisado|
 | must_have_labels | ```lista de string```  | Labels que indicam que determinada issue é uma issue de bug |
 | must_not_have_labels | ```lista de string```  | Labels que indicam que determinada issue não deve ser considerada um bug |
@@ -45,7 +45,7 @@ sudo docker-compose up
 #### Exemplo
 ```json
 {
-    "github_token": "<GITHUB TOKEN>",
+    "github_token": ["<GITHUB_TOKEN_1>", "<GITHUB_TOKEN_1>"],
     "url": "https://github.com/facebook/react",
     "must_have_labels": ["Type: Bug", "bug"],
     "must_not_have_labels": ["Status: Unconfirmed"]
@@ -53,6 +53,7 @@ sudo docker-compose up
 ```
 
 GITHUB TOKEN: É preciso criar um token em https://github.com/settings/tokens, para aumentar o limite de requisições realizadas para a API do Github.
+Para repositórios com muitas issues válidas, é preciso de mais de um token, pois para usuários comuns do github, só é permitido 5000 requests por hora. Outro ponto importante é que os tokens devem ser de contas diferentes, pois so 5000 requisições por usuário.
 
 **DURANTE A CRIAÇÃO NÃO É PRECISO DE NENHUMA AUTORIZAÇÃO**
 
