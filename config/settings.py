@@ -5,6 +5,7 @@ import rq
 # from worker import conn
 import boto3
 import dj_database_url
+import dj_redis_url
 
 load_dotenv(dotenv_path='.env', verbose=True, override=True)
 
@@ -176,12 +177,14 @@ IMGUR_CLIENT_ID = os.environ.get('IMGUR_CLIENT_ID', None)
 RQ_SHOW_ADMIN_LINK = False
 
 if PRODUCTION == True:
+    REDIS_URL = os.environ['REDIS_URL']
+    REDIS_CONN = dj_redis_url.parse(REDIS_URL)
     RQ_QUEUES = {
         'default': {
-            'HOST': os.environ.get('REDIS_HOST', 'redis'),
-            'PORT': os.environ.get('REDIS_PORT', 6379),
+            'HOST': REDIS_CONN['HOST'],
+            'PORT': REDIS_CONN['PORT'],
             'DB': 0,
-            'PASSWORD': os.environ.get('REDIS_PASSWORD', None),
+            'PASSWORD': REDIS_CONN['PASSWORD'],
             'DEFAULT_TIMEOUT': 3600,
         },
     }
