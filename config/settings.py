@@ -77,15 +77,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
 if PRODUCTION == True:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('NAME', 'postgres'),
-            'USER': os.environ.get('USER', 'postgres'),
-            'PASSWORD': os.environ.get('PASSWORD', ''),
-            'HOST': os.environ.get('HOST', 'hostname'),
-            'PORT': os.environ.get('PORT', '5432'),
+            'NAME': os.environ.get('AWS_POSTGRES_DATABASE_NAME', 'postgres'),
+            'USER': os.environ.get('AWS_POSTGRES_USER', 'postgres'),
+            'PASSWORD': os.environ.get('AWS_POSTGRES_PASSWORD', ''),
+            'HOST': os.environ.get('AWS_POSTGRES_HOST', 'hostname'),
+            'PORT': os.environ.get('AWS_POSTGRES_PORT', '5432'),
+            "OPTIONS": {
+                "sslmode": "verify-ca",
+                "sslrootcert": os.path.join(BASE_DIR, "amazon-rds-ca-cert.pem")
+            }
         }
     }
 else:
@@ -191,5 +196,5 @@ else:
     }
 
 
-import django_heroku
-django_heroku.settings(locals())
+# import django_heroku
+# django_heroku.settings(locals())
