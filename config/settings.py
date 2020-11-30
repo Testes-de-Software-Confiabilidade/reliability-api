@@ -185,7 +185,7 @@ if PRODUCTION == True:
             'PORT': REDIS_CONN['PORT'],
             'DB': 0,
             'PASSWORD': REDIS_CONN['PASSWORD'],
-            'DEFAULT_TIMEOUT': 3600,
+            'DEFAULT_TIMEOUT': 7200,
         },
     }
 else:

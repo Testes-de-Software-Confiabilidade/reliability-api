@@ -229,6 +229,10 @@ def import_filtered_issues(github_token_list, url, must_have_labels, must_not_ha
         if(issue.pull_request):
             continue
 
+        print('\n')
+        print(f'{i} of {total}\n{issue}\nlimit remaining = {g.get_rate_limit().core.remaining}')
+        print('\n')
+
         if(g.get_rate_limit().core.remaining < 10):
             idx += 1
             g._Github__requester._Requester__authorizationHeader = "token " + \
