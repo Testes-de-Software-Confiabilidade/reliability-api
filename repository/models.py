@@ -58,4 +58,4 @@ class AsyncTask(models.Model):
     #     unique_together = ('url', 'must_have_labels', 'must_not_have_labels')
 
     def __str__(self):
-        return self.id
+        return f'{self.url} - {self.id}'

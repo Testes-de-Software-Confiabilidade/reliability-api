@@ -1,5 +1,6 @@
 import requests
 
+import time
 import io
 from collections import Counter
 import string
@@ -113,7 +114,7 @@ def process_async(github_token_list, url, must_have_labels, must_not_have_labels
         )
     except Exception as e:
         # print('here ' * 10)
-        # print('e', e)
+        print('e', e)
         task.failed = task.finished = True
         task.save()
         return
@@ -224,6 +225,15 @@ def import_filtered_issues(github_token_list, url, must_have_labels, must_not_ha
     total = job.meta['total_of_issues'] = all_issues.totalCount
     job.save_meta()
 
+    # if len(github_token_list) * 4500 < total:
+    #     job.meta['ERRORS'] = True
+    #     job.meta['ERRORS_MSG'].append(
+    #         f'To process this repository you will need {total} requests, and with passed tokens you can only make {len(github_token_list) * 4500} requests.'
+    #     )
+    #     job.save_meta()
+    #     r.delete()
+    #     raise Exception
+
     idx = 0
     for i, issue in enumerate(all_issues):
         if(issue.pull_request):
@@ -232,6 +242,11 @@ def import_filtered_issues(github_token_list, url, must_have_labels, must_not_ha
         print('\n')
         print(f'{i} of {total}\n{issue}\nlimit remaining = {g.get_rate_limit().core.remaining}')
         print('\n')
+
+        # IF THERE IS ONLY 1 TOKEN, IS NECESSARY WAIT TO REFRESH TOKEN REQUEST LIMITS
+        while(len(github_token_list) == 1 and g.get_rate_limit().core.remaining < 10):
+            print("\nSleep for 10 minutes\n")
+            time.sleep(600)
 
         if(g.get_rate_limit().core.remaining < 10):
             idx += 1
