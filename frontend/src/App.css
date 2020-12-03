@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font: 400 14px Poppins, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+}
+
+.navbar {
+  background-color: #E85217;
+  color: white;
+  width: 100%;
+  padding-left: 2%;
+  font-weight: 400;
+  font-size: 1rem;
+  height: 4%;
+  display: flex;
+  align-items: center;
+}
+
+.main-page-body {
+  padding-top: 1.5%;
+  width: 60%;
+  height:65%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+button {
+  cursor: pointer;
+}
+
+.techs-list {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.saved-repos {
+  border-color: #E85217;
+  border-width: 0.2rem;
+  margin: 1rem;
+  padding: 0.5rem;
+  border-style: solid;
+  color: #E85217;
+  border-radius: 0.3rem;
+  width: 10.0rem;
+  font-weight: 700;
+  font-size: 1.2rem;
+  background-color: white;
+}
+
+
+
+h1 {
+  font-size: 3.5rem;
+}
+
+.main-title{
+  padding: 0;
+  margin: 0;
+}
+.form-repo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30rem;
+}
+
+.description-form {
+  margin-bottom: 2rem;
+}
+
+.description-techs {
+  margin: 1.5rem 0 1.5rem 0;
+}
+
+form input {
+  width: 100%;
+  height: 2.5rem;
+  color: #333;
+  border: 0.125rem solid #217CB9;
+  border-radius: 0.5rem;
+  padding: 0 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+form label {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
