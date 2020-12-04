@@ -31,6 +31,8 @@ PRODUCTION = True if int(os.environ.get("PRODUCTION"))==1 else False
 # print('\n'*3)
 
 ALLOWED_HOSTS = ['reliability-django.herokuapp.com', 'localhost', '127.0.0.1', '0.0.0.0']
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ALLOWED_ORIGINS = ['*']
 
 # Application definition
 
@@ -45,12 +47,14 @@ INSTALLED_APPS = [
     'django_rq',
     'debug_toolbar',
     'repository',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -164,8 +168,8 @@ if PRODUCTION:
     BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME', None)
     s3_conn = boto3.resource(
         's3',
-        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY', None), 
-        aws_secret_access_key=os.environ.get('AWS_SECRECT_ACCESS_KEY', None), 
+        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY', None),
+        aws_secret_access_key=os.environ.get('AWS_SECRECT_ACCESS_KEY', None),
     )
     image_bucket = s3_conn.Bucket(BUCKET_NAME) if BUCKET_NAME else None
 else:
