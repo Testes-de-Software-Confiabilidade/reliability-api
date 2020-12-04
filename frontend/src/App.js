@@ -2,13 +2,18 @@ import React, { useState, useRef } from 'react';
 import './App.css';
 import BackArrow from './back_arrow.svg';
 import reabilityService from './api';
+import {savedRepos} from './mock';
 
-import { Line, Circle } from 'rc-progress';
+import { Circle } from 'rc-progress';
 
 const App = () => {
   const [progress, setProgress] = useState(0);
   const [color, setColor] = useState('#FF0000');
   const [loading, setLoading] = useState(false);
+  const [url, setUrl] = useState('');
+  const [bugLabels, setBugLabels] = useState('');
+  const [othersLabels, setOthersLabels] = useState('');
+
   let i;
   const getColor = () => {
       if(progress < 25)
@@ -25,26 +30,22 @@ const App = () => {
     await setLoading(true);
     setProgress(progress+10);
     executeScroll();
-    await reabilityService.generateReport("https://github.com/vuejs/vue", ["bug"], []);
-    // for(i=0; i<5; i++) {
-      
-    // }
 
+    console.log(url);
+    console.log(bugLabels.split(', '));
+    console.log(othersLabels.split(', '));
+    // await reabilityService.generateReport(
+    //   url,
+    //    bugLabels.split(', '),
+    //     othersLabels.split(', ')
+    //   );
   }
-  
-  // const delay = ms => new Promise(res => setTimeout(res, ms));
-  // const delay = new Promise((resolve) => {
-  //   setTimeout(() => {
-  //     resolve({
-  //       DeuBom: 'sim',
-  //     });
-  //   }, 2000);
-  // });
 
-  // const updatePercent = async () => {
-  //     await delay(0);
-  //     setProgress(progress+10);
-  // }
+  const buttonClickSetForm = (key) => {
+    setUrl(savedRepos[key]["url"]);
+    setBugLabels(savedRepos[key]["must_have_labels"]);
+    setOthersLabels(savedRepos[key]["must_not_have_labels"]);
+  }
 
   const myRef = useRef(null);
 
@@ -59,20 +60,40 @@ const App = () => {
         <h1 className="main-title">Análise da Confiabilidade de Softwares de Código Aberto</h1>
         <p className="description-techs">Selecione um Framework para preencher os dados dos seguintes repositórios: </p>
         <div className="techs-list">
-          <button className="saved-repos"> Angular </button>
-          <button className="saved-repos"> AngularJS </button>
-          <button className="saved-repos"> ASP.NET Core </button>
-          <button className="saved-repos"> Spring </button>
+          <button className="saved-repos" onClick={()=>{buttonClickSetForm("angular");}}> Angular </button>
+          <button className="saved-repos" onClick={()=>{buttonClickSetForm("angularjs");}}> AngularJS </button>
+          <button className="saved-repos" onClick={()=>{buttonClickSetForm("aspnet");}}> ASP.NET Core </button>
+          <button className="saved-repos" onClick={()=>{buttonClickSetForm("spring");}}> Spring </button>
         </div>
         <p className="description-form"> ou </p>
         <p className="description-form"> Insira o link do repositório hospedado no GitHub que deseja analisar e o nome da(s) label(s) que deseja realizar a análise.  </p>
         <div className="form-repo">
           <label for="bug-labels">Link do  Repositório</label>
-          <input type="text" id="repo-url" name="repo-url"/>
+          <input
+            type="text"
+            id="repo-url"
+            name="repo-url"
+            value={url}
+            onChange={(e)=>setUrl(e.target.value)}
+          />
+
           <label for="bug-labels">Labels de Bug utilizadas no Repositório</label>
-          <input type="text" id="bug-labels" name="bug-labels"/>
+          <input
+            type="text"
+            id="bug-labels"
+            name="bug-labels"
+            value={bugLabels}
+            onChange={(e)=>setBugLabels(e.target.value)}
+          />
+
           <label for="not-bug-labels">Labels não desejadas</label>
-          <input type="text" id="not-bug-labels" name="not-bug-labels"/>
+          <input
+            type="text"
+            id="not-bug-labels"
+            name="not-bug-labels"
+            value={othersLabels}
+            onChange={(e)=>setOthersLabels(e.target.value)}
+          />
             <button
               className="form-send-button"
               onClick={() => {
