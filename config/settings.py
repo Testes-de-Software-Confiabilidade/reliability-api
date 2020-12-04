@@ -22,6 +22,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True if int(os.environ.get("DEBUG"))==1 else False
 PRODUCTION = True if int(os.environ.get("PRODUCTION"))==1 else False
 
+API_LIMITS = 500
+
 # REMOVE LATER
 # DEBUG = False
 # PRODUCTION = False

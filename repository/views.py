@@ -9,6 +9,7 @@ from rest_framework import viewsets
 from rest_framework import mixins
 
 import django_rq
+from rq.registry import StartedJobRegistry
 
 from .models import Repository, AsyncTask
 from .serializers import RepositorySerializer
@@ -46,7 +47,16 @@ class RepositoryViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             )
 
             if(tasks.exists()):
-                image_url = tasks.first().image
+                if(tasks.first().finished != True):
+                    domain = get_current_site(request)
+                    data = {
+                        'message': ("The issues in this repository are being processed. "
+                                    "Access the following link to follow the processing."),
+                        'link': f'https://{domain}/processing?status_token={tasks.first().id}'
+                    }
+                    return Response(data, status=status.HTTP_200_OK)
+                else:
+                    image_url = tasks.first().image
             else:
                 image_url = process(repositories.first(), must_not_have_labels)
             
@@ -94,6 +104,20 @@ def processing(request):
 
     if not status_token:
         return Response({'message': 'Token not defined'}, status=status.HTTP_400_BAD_REQUEST)
+
+    ids = django_rq.get_queue('default').get_job_ids()
+    
+    for i, id in enumerate(ids):
+        if id == status_token:
+            registry = StartedJobRegistry('default', connection=django_rq.get_connection('default'))
+            current = registry.get_job_ids()[0]
+            return Response(
+                {
+                    'message': f'This repository is in the queue to be processed. Its processing queue number is {i+1}. In the meantime keep up with current processing.',
+                    'link': f'https://{get_current_site(request)}/processing?status_token={current}'
+                }, 
+                status=status.HTTP_200_OK
+            )
     
     tasks = AsyncTask.objects.filter(id=status_token)
 

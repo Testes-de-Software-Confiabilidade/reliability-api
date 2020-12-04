@@ -12,7 +12,7 @@ from github import Github
 
 import matplotlib.pyplot as plt
 
-from config.settings import image_bucket, BUCKET_NAME, IMGUR_CLIENT_ID
+from config.settings import image_bucket, BUCKET_NAME, IMGUR_CLIENT_ID, API_LIMITS
 
 import scipy.stats as ss
 
@@ -201,6 +201,11 @@ def import_filtered_issues(github_token_list, url, must_have_labels, must_not_ha
         job.meta['ERRORS_MSG'].append(
             'The defined url does not belong to a public github repository.'
         )
+        
+        for arg in e.args:
+            if isinstance(arg, dict):
+                job.meta['ERRORS_MSG'].append(arg['message'])
+
         job.save_meta()
         raise
         
@@ -216,6 +221,15 @@ def import_filtered_issues(github_token_list, url, must_have_labels, must_not_ha
         job.meta['ERRORS'] = True
         job.meta['ERRORS_MSG'].append(
             f'With the issue filters defined, it was possible to select only {all_issues.totalCount} issues, with the minimum required being 100.'
+        )
+        job.save_meta()
+        r.delete()
+        raise Exception
+
+    if all_issues.totalCount > API_LIMITS:
+        job.meta['ERRORS'] = True
+        job.meta['ERRORS_MSG'].append(
+            f"I'm sorry, but due to Heroku's infrastructure limitations we will only accept issue filters up to {API_LIMITS}, the defined filters selected {all_issues.totalCount} issues. You can process without this limitation by running the application locally."
         )
         job.save_meta()
         r.delete()
