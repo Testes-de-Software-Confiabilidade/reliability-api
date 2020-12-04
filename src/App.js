@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import './App.css';
 import BackArrow from './back_arrow.svg';
-import reabilityService from './api';
 import {savedRepos} from './mock';
 
 import { Circle } from 'rc-progress';
@@ -14,7 +13,6 @@ const App = () => {
   const [bugLabels, setBugLabels] = useState('');
   const [othersLabels, setOthersLabels] = useState('');
 
-  let i;
   const getColor = () => {
       if(progress < 25)
         return '#FF0000';
