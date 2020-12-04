@@ -1,113 +1,70 @@
-# API para o serviço de Confiabilidade
+# Getting Started with Create React App
 
-Essa API fornece o serviço de processamento de repositório, retornando um link para a imagem resultante desse processamento.
-Quando a solitação é feita, é retornado um `token de status` que irá está associado a um processamento. Com esse token é possível obter o status do processamento.
-Quando o processamento é finalizado, a rota de status do processamento irá returnar o link para a imagem resultante.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Available Scripts
 
-<br><br>
-## Rodar locamente
+In the project directory, you can run:
 
-#### 1. Crie uma conta no [imgur](https://imgur.com/)
-#### 2. Registre uma aplicação na sua conta do imgur ([link](https://api.imgur.com/oauth2/addclient)).
+### `yarn start`
 
-> Durante o registro seleciona a opção `OAuth 2 authorization without a callback URL`
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-#### 3. Atualize o arquivo `.env` com seu `CLIENT_ID`
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-#### 4. Rode o comando abaixo para não deixar o git rastrear o arquivo `.env`
+### `yarn test`
 
-```
-git update-index --assume-unchanged .env
-```
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-#### 5. Suba os containers com o docker-compose
+### `yarn build`
 
-```
-sudo docker-compose up
-```
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-<br><br>
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-# Rotas
+### `yarn eject`
 
-## GET /issues
-#### Parameters
-| Name | Type | Description |
-|:----:|:----:|:-----------:|
-| github_token | ```lista de string```  | Tokens que podem ser usados para acessar a API do Github |
-| url | ```string```  | URL para o repositório que será analisado|
-| must_have_labels | ```lista de string```  | Labels que indicam que determinada issue é uma issue de bug |
-| must_not_have_labels | ```lista de string```  | Labels que indicam que determinada issue não deve ser considerada um bug |
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-#### Exemplo
-```json
-{
-    "github_token": ["<GITHUB_TOKEN_1>", "<GITHUB_TOKEN_1>"],
-    "url": "https://github.com/facebook/react",
-    "must_have_labels": ["Type: Bug", "bug"],
-    "must_not_have_labels": ["Status: Unconfirmed"]
-}
-```
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-GITHUB TOKEN: É preciso criar um token em https://github.com/settings/tokens, para aumentar o limite de requisições realizadas para a API do Github.
-Para repositórios com muitas issues válidas, é preciso de mais de um token, pois para usuários comuns do github, só é permitido 5000 requests por hora. Outro ponto importante é que os tokens devem ser de contas diferentes, pois so 5000 requisições por usuário.
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-**DURANTE A CRIAÇÃO NÃO É PRECISO DE NENHUMA AUTORIZAÇÃO**
+## Learn More
 
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Reponse
-| Name | Type | Description |
-|:----:|:----:|:-----------:|
-| message | ```string```  | Mensagem para o status do processamento |
-| link | ```string```  | Link para acompanhar o processamento da requisição |
+### Code Splitting
 
-#### Exemplo
-```json
-{
-    "message": "The repository has been successfully added to the processing queue! Follow the link to check the processing status.",
-    "link": "https://reliability-django.herokuapp.com/processing?status_token=72e662d5-fe11-482d-bae1-bcfb9ae1ea7d"
-}
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
+### Analyzing the Bundle Size
 
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-<br><br>
+### Making a Progressive Web App
 
-## GET /processing?status_token=<STATUS_TOKEN>
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-#### Exemplo
-```
-/processing?status_token=72e662d5-fe11-482d-bae1-bcfb9ae1ea7d
-```
+### Advanced Configuration
 
-#### Reponse
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-Essa rota irá retornar o status do processamento, caso o processamento não tenha terminado.
-Caso o processamento já tenha terminado, será retornado o link para a image gerada.
+### Deployment
 
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-#### Exemplo processamento em andamento
-```json
-{
-    "message": "This repository is still being processed. ",
-    "status": {
-        "ERRORS_MSG": [],
-        "ERRORS": false,
-        "total_of_issues": 377,
-        "progress": "2.12%",
-        "issues_processed": 8
-    }
-}
-```
+### `yarn build` fails to minify
 
-#### Exemplo processamento finalizado
-```json
-{
-    "message": "The repository has been successfully added to the processing queue! Follow the link to check the processing status.",
-    "link": "https://reliability-images.s3-sa-east-1.amazonaws.com/4BPIXN5UAZ.png"
-}
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
