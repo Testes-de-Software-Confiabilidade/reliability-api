@@ -5,7 +5,6 @@ const api = axios.create({
 });
 
 class ReabilityService {
-    constructor(){}
     async generateReport( url, mustHaveLabels, mustNotHaveLabels ){
         const body = {
             "url": url,
