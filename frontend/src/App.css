@@ -64,8 +64,14 @@ button {
   font-weight: 700;
   font-size: 1.2rem;
   background-color: white;
+  transition: 200ms;
 }
 
+.saved-repos:hover{
+  background-color: #E85217;
+  color: #ffffff;
+  width: 10.5rem;
+}
 h1 {
   font-size: 3.5rem;
 }

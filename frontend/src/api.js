@@ -11,10 +11,9 @@ class ReabilityService {
             "url": url,
             "must_have_labels": mustHaveLabels,
             "must_not_have_labels": mustNotHaveLabels,
-            "github_token": []
+            "github_token": process.env.REACT_APP_GITHUB_TOKEN.split(', ')
         };
-        const report = await api.post('/repository', body);
-        console.log(report.data);
+        const report = await api.post('/repository/', body, { 'Content-Type': 'application/json' },);
         return report.data;
     }
 }
