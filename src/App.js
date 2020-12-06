@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import './App.css';
 import BackArrow from './back_arrow.svg';
-import reabilityService from './api';
 import {savedRepos} from './mock';
 
 import { Circle } from 'rc-progress';
