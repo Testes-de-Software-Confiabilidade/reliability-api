@@ -13,8 +13,9 @@ const App = () => {
   const [url, setUrl] = useState('');
   const [bugLabels, setBugLabels] = useState('');
   const [othersLabels, setOthersLabels] = useState('');
+  const [image, setImage] = useState('');
+  let response;
 
-  let i;
   const getColor = () => {
       if(progress < 25)
         return '#FF0000';
@@ -25,22 +26,29 @@ const App = () => {
   }
 
   const onClick = async () => {
-    
-    setColor(getColor());
     await setLoading(true);
-    setProgress(progress+10);
     executeScroll();
+    response = await reabilityService.generateReport(
+      url,
+       bugLabels.split(', '),
+        othersLabels.split(', ')
+      );
+      if(response.link.includes('png')){
+        await setImage(response.link);
+        await updateProgressBar(100);
+      }
+      else{
+        // implementar código de quando estiver carregando
+        await updateProgressBar(10);
+      }
+      
 
-    console.log(url);
-    console.log(bugLabels.split(', '));
-    console.log(othersLabels.split(', '));
-    // await reabilityService.generateReport(
-    //   url,
-    //    bugLabels.split(', '),
-    //     othersLabels.split(', ')
-    //   );
   }
 
+  const updateProgressBar = async (progress) =>{
+    await setProgress(progress);
+    setColor(getColor());
+  }
   const buttonClickSetForm = (key) => {
     setUrl(savedRepos[key]["url"]);
     setBugLabels(savedRepos[key]["must_have_labels"]);
@@ -114,7 +122,7 @@ const App = () => {
             </div>
             <h2>Carregando resultado...</h2>
           </>) : (
-            <img src= "https://reliability-images.s3-sa-east-1.amazonaws.com/PZKXM09MUN.png" alt="" />
+            <img src={image} alt="" />
           )
         }
         
