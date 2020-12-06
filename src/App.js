@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import './App.css';
+import reabilityService from './api';
 import BackArrow from './back_arrow.svg';
 import {savedRepos} from './mock';
 
