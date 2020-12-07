@@ -38,8 +38,17 @@ const App = () => {
         await updateProgressBar(100);
       }
       else{
-        // implementar código de quando estiver carregando
-        await updateProgressBar(10);
+        try{
+          let url = response.link;
+          do{
+            response = await reabilityService.getReportStatus(url);
+            updateProgressBar(response.status.progress);
+          }while(response.status.progress<100);
+          await setImage(response.link);
+          
+        }catch(error){
+          alert(error);
+        }
       }
       
 

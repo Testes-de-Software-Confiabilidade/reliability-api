@@ -16,6 +16,10 @@ class ReabilityService {
         const report = await api.post('/repository/', body, { 'Content-Type': 'application/json' },);
         return report.data;
     }
+    async getReportStatus(url){
+        const response = await axios.get(url);
+        return response.data;
+    }
 }
 
 const reabilityService = new ReabilityService();
