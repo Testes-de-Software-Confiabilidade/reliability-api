@@ -5,6 +5,7 @@ const api = axios.create({
 });
 
 class ReabilityService {
+    constructor(){}
     async generateReport( url, mustHaveLabels, mustNotHaveLabels ){
         const body = {
             "url": url,
@@ -14,6 +15,10 @@ class ReabilityService {
         };
         const report = await api.post('/repository/', body, { 'Content-Type': 'application/json' },);
         return report.data;
+    }
+    async getReportStatus(url){
+        const response = await axios.get(url);
+        return response.data;
     }
 }
 
